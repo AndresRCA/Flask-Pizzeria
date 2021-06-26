@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Pizzeria | Finalizar Orden{% endblock %}
+
+{% block content %}
+<div class="container section content">
+	{% if status == 'SUCCESS' %}
+		<h2>Su orden fue enviada exitosamente!</h2>
+		<hr>
+		<p>Espero que haya disfrutado de nuestros servicios, hasta la próxima vez!</p>
+		<a class="button" href="{{ url_for('index') }}">Salir</a>
+	{% elif status == 'ERROR' %}
+		<h2>ERROR</h2>
+		<hr>
+		<p>Hubo un problema para enviar su orden, quiere volver a intentar?</p>
+		<a class="button" href="{{ url_for('placeOrder') }}">Si</a>&nbsp;<a class="button" href="{{ url_for('index') }}">Salir</a>
+	{% endif %}
+</div>
+{% endblock %}

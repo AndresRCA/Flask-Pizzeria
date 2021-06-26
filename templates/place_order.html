@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Pizzeria | Ordenar{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/place_order.css') }}">
+{% endblock %}
+
+{% block scripts_head %}
+{% if ENV_MODE == 'DEV' %} <!-- ENV_MODE came from pizzeria/context_processors.py -->
+<!-- vue development version -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+{% elif ENV_MODE == 'PRODUCTION' %}
+<!-- vue production version -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
+<div id="app" v-cloak class="container section">
+
+  <!-- error message when a validation error occurs -->
+  <article v-show="error.isOn" class="message is-danger is-small">
+    <div class="message-header">
+      <p>Error</p>
+      <button @click="deleteErrorMessage" class="delete" aria-label="delete"></button>
+    </div>
+    <div class="message-body">[[ error.message ]]</div>
+  </article>
+  <h4 class="title is-4">Llena los datos para ordenar!</h4>
+  <hr>
+
+  <form @submit.prevent="placeOrder">
+    <!-- {% csrf_token %} -->
+    <div class="columns">
+      <div class="column">
+        <div class="field is-horizontal is-pulled-left">
+          <div class="field-label is-normal">
+            <label class="label">Cliente:</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded">
+                <input v-model="first_name" name="first_name" class="input" type="text" placeholder="Primer Nombre" required>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control is-expanded">
+                <input v-model="last_name" name="last_name" class="input" type="text" placeholder="Apellido" required>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h4 class="title is-4">Customiza tu pizza</h4>
+    <hr>
+
+    <div class="columns">
+      <div class="column">
+        <div class="field has-addons is-horizontal is-pulled-left">
+          <div class="field-label is-normal">
+            <label class="label">Tamaños:</label>
+          </div>
+          <div class="field-body">
+            <div class="control">
+              <div class="select">
+                <select class="select" v-model="selected_size">
+                  <!-- size options from database -->
+                  <option v-for="size in sizes" :value="size">[[ size.name | capitalize ]]</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <!-- size.price when a size is selected -->
+              <a class="button is-static">[[ size_price | currency ]]</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        <h6 class="title is-6">Toppings:</h6>      
+        <div class="field is-grouped is-grouped-multiline">
+          <!-- selected tags go here -->
+          <div v-for="(topping, index) in selected_toppings" :key="topping.id" class="control">
+            <div class="tags has-addons">
+              <span class="tag">[[ topping.name ]]</span>
+              <a @click="removeToppingFromSelected(index)" class="tag is-delete"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <h6 class="title is-6 has-text-centered">Selecciona tus toppings:</h6>
+        <div id="toppingList" class="field is-grouped is-grouped-multiline">
+          <!-- topping tags are generated here -->
+          <div v-for="topping in toppings" @click="addTopping(topping.id)" class="control">
+            <div class="tags has-addons">
+              <span class="tag">[[ topping.name ]]</span>
+              <span class="tag is-info">[[ topping.price | currency ]]</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button type="button" @click="addPizza" class="button">+Agregar Pizza</button>
+      </div>
+    </div>
+
+    <hr>
+    <h4 class="title is-4">Pizzas:</h4>
+    <div v-if="pizzas.length > 0">
+      <ul>
+        <!-- pizza items go here -->
+        <li class="level" v-for="(pizza, index) in pizzas">
+          <div class="level-left">
+            <div class="level-item">
+              <a class="delete" @click="removePizza(index)"></a>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Pizza</p>
+                <b>No.[[ index+1 ]]</b>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Tamaño</p>
+                <p>[[ pizza.size.name | capitalize ]]</p>
+              </div>
+            </div>
+            <div class="level-item">
+              <div>
+                <p class="heading">Toppings</p>
+                <p v-if="pizza.toppings.length > 0">[[ pizza.getToppingNames().join(', ') ]]</p>
+                <p v-else>No tiene toppings</p>
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <p class="level-item"><b>Total:</b>&nbsp;[[ pizza.getTotal() | currency ]]</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div v-else class="content has-text-centered">
+      <p class="is-size-5 has-text-weight-light">No hay pizzas todavia</p>
+    </div>
+
+    <hr>
+    
+    <div v-show="pizzas.length > 0" class="content" style="display: flex; justify-content: space-between;">
+      <input type="submit" value="Ordenar" class="button is-info">
+      <p>
+        <b>Total de la orden:</b>&nbsp;[[ order_total | currency ]]      
+      </p>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts_footer %}
+<!-- data from backend that is later assigned to the script below this one -->
+<script>
+  var sizes = {{ sizes | safe }}
+  var toppings = {{ toppings | safe }}
+</script>
+<!-- the vue app file will live here-->
+<script src="{{ url_for('static', filename='js/place_order.js') }}"></script>
+{% endblock %}
