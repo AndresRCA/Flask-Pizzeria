@@ -93,7 +93,7 @@ var app = new Vue({
       const order = new Order(this.first_name, this.last_name, pizzas_copy)
 
       try {
-        let response = await fetch('/ordenar/', {
+        let response = await fetch('/order/', {
           method: 'POST',
           mode: 'same-origin',
           body: JSON.stringify(order),
@@ -110,11 +110,11 @@ var app = new Vue({
         
         let res_message = await response.text()
         console.log(res_message) // the response was successful
-        window.location.href = '/ordenar/confirmar' // redirect to confirmation view
+        window.location.href = '/order/confirm' // redirect to confirmation view (try to do this from flask instead)
       } catch(e) {
         console.log(e)
-		this.error.message = e
-		this.error.isOn = true
+        this.error.message = e
+        this.error.isOn = true
       }
     },
     deleteErrorMessage() {

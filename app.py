@@ -7,7 +7,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route("/ordenar", methods=['GET', 'POST'])
+@app.route("/order", methods=['GET', 'POST'])
 def placeOrder():
     if request.method == 'GET':
         context = {}
@@ -36,10 +36,10 @@ def validateOrder(self, order):
             key = k
     return error, key
 
-@app.route("/ordenar/confirmar")
+@app.route("/order/confirm")
 def confirmOrder():
     return render_template('confirm_order.html')
 
-@app.route("/ordenar/finalizar")
+@app.route("/order/finalize")
 def finalizeOrder():
     return render_template('finalize_order.html')
