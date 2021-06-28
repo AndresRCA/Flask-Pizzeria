@@ -19,7 +19,7 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title is-2">Django Pizzeria</h1>
-          <h2 class="subtitle">Un lugar para disfrutar pizza</h2>
+          <h2 class="subtitle">A place to enjoy pizza</h2>
         </div>
       </div>
     </header>
@@ -36,8 +36,8 @@
       <div id="navbarMenu" class="navbar-menu">
         <div class="navbar-start">
           {% block navbar_items %}
-          <a href="{{ url_for('index') }}" class="navbar-item">Inicio</a>
-          <a href="{{ url_for('placeOrder') }}" class="navbar-item">Ordenar</a>
+          <a href="{{ url_for('index') }}" class="navbar-item">Home</a>
+          <a href="{{ url_for('placeOrder') }}" class="navbar-item">Order</a>
           {% endblock %}
         </div>
       </div>

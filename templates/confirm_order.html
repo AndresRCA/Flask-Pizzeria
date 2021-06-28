@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
-{% block title %}Pizzeria | Confirmar Orden{% endblock %}
+{% block title %}Pizzeria | Confirm Order{% endblock %}
 
 {% block content %}
 {% load pizzeria_extras %} <!-- custom filters are loaded -->
 <div class="container section content">
-  <h3>Nombre: {{ first_name }} {{ last_name }}</h3>
+  <h3>Name: {{ first_name }} {{ last_name }}</h3>
   {% for pizza in pizzas %}
 	<h4>Pizza Nr.{{ forloop.counter }}</h4>
     <div class="columns is-mobile">
-      <span class="column is-4">Tamaño: {{ pizza.size.name }}</span>
+      <span class="column is-4">Size: {{ pizza.size.name }}</span>
       <span class="column is-4"></span>
-      <span class="column is-4">costo: {{ pizza.size.price | currency }}</span>
+      <span class="column is-4">cost: {{ pizza.size.price | currency }}</span>
     </div>
     {% if pizza.toppings %}
       <div class="columns is-multiline is-mobile">
       {% for topping in pizza.toppings %}
         <span class="column is-4">{{ topping.name }}</span>
-        <span class="column is-4">{{topping.amount}} {% if topping.amount == 1 %}unidad{% else %}unidades{% endif %}</span>
-        <span class="column is-4">costo: {{topping.total | currency}}</span>
+        <span class="column is-4">{{topping.amount}} {% if topping.amount == 1 %}unit{% else %}units{% endif %}</span>
+        <span class="column is-4">cost: {{topping.total | currency}}</span>
       {% endfor %}
       </div>
     {% endif %}
@@ -29,9 +29,9 @@
     <span class="column is-4"></span>
     <span class="column is-4"><b>total:</b> {{ total | currency }}</span>
   </div>
-  <h4>Esta información es correcta?</h4>
+  <h4>Is this information correct?</h4>
   <div style="display: flex; justify-content: center;">
-    <a href="{{ url_for('finalizeOrder') }}" class="mx-2 button is-info">SI</a>
+    <a href="{{ url_for('finalizeOrder') }}" class="mx-2 button is-info">YES</a>
     <a href="{{ url_for('placeOrder') }}" class="mx-2 button is-danger">NO</a>
   </div>
 </div>
