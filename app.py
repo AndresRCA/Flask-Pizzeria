@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request
+import json
 
 app = Flask(__name__)
 
@@ -16,15 +17,13 @@ def placeOrder():
         return render_template('place_order.html', context=context) # jsonify() is probably necessary here? I'll check later
 
     if request.method == 'POST':
-        '''
         order_info = json.loads(request.body) # obtains the info from the poll.
-		error, key = self.validateOrder(order_info)
-		if error:
-			return HttpResponseBadRequest(f"ERROR: the parameter {key} can't be empty.")
-		else:
-			request.session['_order'] = order_info # session var used in pizzeria:confirm_order url.
-			return HttpResponse('There are no empty fields.')
-        '''
+        error, key = validateOrder(order_info)
+        if error:
+            return f"ERROR: the parameter {key} can't be empty.", 400
+        else:
+            request.cookies['_order'] = order_info # cookies var used in confirmOrder url.
+            return 'There are no empty fields.'
 
 # this function which was written by the other collaborator is flawed and I'll probably delete it
 def validateOrder(self, order):
