@@ -8,11 +8,13 @@
 
 {% block scripts_head %}
 {% if ENV_MODE == 'DEV' %} <!-- ENV_MODE came from pizzeria/context_processors.py -->
-<!-- vue development version -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- react development version -->
+<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
 {% elif ENV_MODE == 'PRODUCTION' %}
-<!-- vue production version -->
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- react production version -->
+<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
 {% endif %}
 {% endblock %}
 
