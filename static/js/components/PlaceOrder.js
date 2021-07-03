@@ -34,6 +34,17 @@ export default class PlaceOrder extends React.Component {
         return total;
     }
 
+    /**
+     * handle input change and set state according to given key
+     * @param {event} event 
+     * @param {string} key 
+     */
+    handleChange(event, key) {
+        let new_state = {};
+        new_state[key] = event.target.value;
+        this.setState(new_state);
+    }
+
     addTopping(id) {
         let topping = this.state.toppings.find(topping => topping.id == id);
         this.setState(prevState => ({selected_toppings: [...prevState.selected_toppings, topping]}));
@@ -91,6 +102,164 @@ export default class PlaceOrder extends React.Component {
     }
 
     render() {
+        const { first_name, last_name, selected_size, error, sizes, pizzas, toppings } = this.state;
 
+        return (
+            <div>
+                {/* error message when a validation error occurs */}
+                {error.isOn && 
+                    <article class="message is-danger is-small">
+                        <div class="message-header">
+                            <p>Error</p>
+                            <button onClick={() => this.deleteErrorMessage()} class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body">{ error.message }</div>
+                    </article>
+                }
+                <h4 class="title is-4">Fill the data to order!</h4>
+                <hr />
+                <form onSubmit={() => this.placeOrder()}> {/* add the .prevent*/}
+                    {/* {% csrf_token %} */}
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field is-horizontal is-pulled-left">
+                                <div class="field-label is-normal">
+                                    <label class="label">Client:</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control is-expanded">
+                                            <input value={first_name} onChange={(e) => this.handleChange(e, 'first_name')} name="first_name" class="input" type="text" placeholder="Name" required />
+                                        </p>
+                                    </div>
+                                    <div class="field">
+                                        <p class="control is-expanded">
+                                            <input value={last_name} onChange={(e) => this.handleChange(e, 'last_name')} name="last_name" class="input" type="text" placeholder="Last Name" required />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="title is-4">Customize your pizza</h4>
+                    <hr />
+
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field has-addons is-horizontal is-pulled-left">
+                                <div class="field-label is-normal">
+                                    <label class="label">Sizes:</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="control">
+                                        <div class="select">
+                                            <select class="select" value={selected_size} onChange={(e) => this.handleChange(e, 'selected_size')}>
+                                                {/* size options from database */}
+                                                {sizes.map(size => 
+                                                    <option value={size}>{ size.name.capitalize() }</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="control">
+                                        {/* size.price when a size is selected */}
+                                        <a class="button is-static">{ this.size_price().currency() }</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="column">
+                            <h6 class="title is-6">Toppings:</h6>      
+                            <div class="field is-grouped is-grouped-multiline">
+                                {/* selected tags go here */}
+                                {selected_toppings.map((topping, index) => 
+                                    <div key={topping.id} class="control">
+                                        <div class="tags has-addons">
+                                            <span class="tag">{ topping.name }</span>
+                                            <a onClick={() => this.removeToppingFromSelected(index)} class="tag is-delete"></a>
+                                        </div>
+                                    </div>)}
+                            </div>
+                        </div>
+                        <div class="column">
+                            <h6 class="title is-6 has-text-centered">Select your toppings:</h6>
+                            <div id="toppingList" class="field is-grouped is-grouped-multiline">
+                                {/* topping tags are generated here */}
+                                {toppings.map(topping => 
+                                    <div onClick={() => this.addTopping(topping.id)} class="control">
+                                        <div class="tags has-addons">
+                                            <span class="tag">{ topping.name }</span>
+                                            <span class="tag is-info">{ topping.price.currency() }</span>
+                                        </div>
+                                    </div>)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button type="button" onClick={() => this.addPizza()} class="button">+Add Pizza</button>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h4 class="title is-4">Pizzas:</h4>
+                    {(pizzas.length > 0) 
+                        ? 
+                        <ul>
+                            {/* pizza items go here */}
+                            {pizzas.map((pizza, index) => 
+                                <li class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <a class="delete" onClick={() => this.removePizza(index)}></a>
+                                        </div>
+                                        <div class="level-item has-text-centered">
+                                            <div>
+                                                <p class="heading">Pizza</p>
+                                                <b>No.{ index + 1 }</b>
+                                            </div>
+                                        </div>
+                                        <div class="level-item has-text-centered">
+                                            <div>
+                                                <p class="heading">Size</p>
+                                                <p>{ pizza.size.name.capitalize() }</p>
+                                            </div>
+                                        </div>
+                                        <div class="level-item">
+                                            <div>
+                                                <p class="heading">Toppings</p>
+                                                {(pizza.toppings.length > 0) 
+                                                    ? <p>{ pizza.getToppingNames().join(', ') }</p>
+                                                    : <p>No toppings</p>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <p class="level-item"><b>Total:</b>&nbsp;{ pizza.getTotal().currency() }</p>
+                                    </div>
+                                </li>)}
+                        </ul>
+                        : 
+                        <div class="content has-text-centered">
+                            <p class="is-size-5 has-text-weight-light">There are no pizzas yet</p>
+                        </div>
+                    }
+
+                    <hr />
+                    
+                    {pizzas.length > 0 && 
+                        <div class="content" style="display: flex; justify-content: space-between;">
+                            <input type="submit" value="Order" class="button is-info" />
+                            <p><b>Order total:</b>&nbsp;{ order_total.currency() }</p>
+                        </div>
+                    }
+
+                </form>
+            </div>
+        );
     }
 }
