@@ -1,5 +1,8 @@
 import Pizza from "../classes/Pizza";
 import Order from "../classes/Order";
+import { ToppingList, Topping } from "./Toppings";
+import { ErrorMessage } from "./ErrorMessage";
+import { PizzaItem } from "./PizzaItem";
 // either useful prototype functions or regular functions that don't have any relation to the component
 import "../helper_functions";
 import getCookie from "../helper_functions"; // this is just for readability, it's already imported up here
@@ -68,7 +71,8 @@ export default class PlaceOrder extends React.Component {
         this.setState({ pizzas });
     }
 
-    async placeOrder() {
+    async placeOrder(event) {
+        event.prevenDefault();
         let pizzas_copy = Array.from(this.state.pizzas);
         const order = new Order(this.state.first_name, this.state.last_name, pizzas_copy);
 
@@ -107,18 +111,10 @@ export default class PlaceOrder extends React.Component {
         return (
             <div>
                 {/* error message when a validation error occurs */}
-                {error.isOn && 
-                    <article class="message is-danger is-small">
-                        <div class="message-header">
-                            <p>Error</p>
-                            <button onClick={() => this.deleteErrorMessage()} class="delete" aria-label="delete"></button>
-                        </div>
-                        <div class="message-body">{ error.message }</div>
-                    </article>
-                }
+                {error.isOn && <ErrorMessage message={error.message} deleteErrorMessage={this.deleteErrorMessage} />}
                 <h4 class="title is-4">Fill the data to order!</h4>
                 <hr />
-                <form onSubmit={() => this.placeOrder()}> {/* add the .prevent*/}
+                <form onSubmit={(e) => this.placeOrder(e)}>
                     {/* {% csrf_token %} */}
                     <div class="columns">
                         <div class="column">
@@ -186,16 +182,10 @@ export default class PlaceOrder extends React.Component {
                         </div>
                         <div class="column">
                             <h6 class="title is-6 has-text-centered">Select your toppings:</h6>
-                            <div id="toppingList" class="field is-grouped is-grouped-multiline">
+                            <ToppingList>
                                 {/* topping tags are generated here */}
-                                {toppings.map(topping => 
-                                    <div onClick={() => this.addTopping(topping.id)} class="control">
-                                        <div class="tags has-addons">
-                                            <span class="tag">{ topping.name }</span>
-                                            <span class="tag is-info">{ topping.price.currency() }</span>
-                                        </div>
-                                    </div>)}
-                            </div>
+                                {toppings.map(topping => <Topping topping={topping} onClick={() => this.addTopping(topping.id)} />)}
+                            </ToppingList>
                         </div>
                     </div>
 
@@ -212,36 +202,7 @@ export default class PlaceOrder extends React.Component {
                         <ul>
                             {/* pizza items go here */}
                             {pizzas.map((pizza, index) => 
-                                <li class="level">
-                                    <div class="level-left">
-                                        <div class="level-item">
-                                            <a class="delete" onClick={() => this.removePizza(index)}></a>
-                                        </div>
-                                        <div class="level-item has-text-centered">
-                                            <div>
-                                                <p class="heading">Pizza</p>
-                                                <b>No.{ index + 1 }</b>
-                                            </div>
-                                        </div>
-                                        <div class="level-item has-text-centered">
-                                            <div>
-                                                <p class="heading">Size</p>
-                                                <p>{ pizza.size.name.capitalize() }</p>
-                                            </div>
-                                        </div>
-                                        <div class="level-item">
-                                            <div>
-                                                <p class="heading">Toppings</p>
-                                                {(pizza.toppings.length > 0) 
-                                                    ? <p>{ pizza.getToppingNames().join(', ') }</p>
-                                                    : <p>No toppings</p>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="level-right">
-                                        <p class="level-item"><b>Total:</b>&nbsp;{ pizza.getTotal().currency() }</p>
-                                    </div>
-                                </li>)}
+                                <PizzaItem pizza={pizza} index={index} removePizza={this.removePizza} />)}
                         </ul>
                         : 
                         <div class="content has-text-centered">
