@@ -59,15 +59,15 @@ class Sale(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     total = db.Column(db.Float) # this total comes from self.order.total at the moment of adding a Sale obj to the DB
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False) # A sale only has one row in Order table (one to one)
+    order_id = db.Column(db.Integer, db.ForeignKey('Orders.id'), nullable=False) # A sale only has one row in Order table (one to one)
 
     def __repr__(self):
         return "Sale from {}".format(self.order.full_name)
 
 # will the the extra column 'amount' be alright? 
 ToppingAmount = db.Table('ToppingAmount', 
-    db.Column('pizza_id', db.Integer, db.ForeignKey('pizza.id'), primary_key=True),
-    db.Column('topping_id', db.Integer, db.ForeignKey('topping.id'), primary_key=True),
+    db.Column('pizza_id', db.Integer, db.ForeignKey('Pizzas.id'), primary_key=True),
+    db.Column('topping_id', db.Integer, db.ForeignKey('Toppings.id'), primary_key=True),
     db.Column('amount', db.Integer, nullable=False)
 )
 
@@ -75,8 +75,8 @@ class Pizza(db.Model):
     __tablename__ = 'Pizzas'
 
     id = db.Column(db.Integer, primary_key=True)
-    size_id = db.Column(db.Integer, db.ForeignKey('size.id'), nullable=False) 
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    size_id = db.Column(db.Integer, db.ForeignKey('Sizes.id'), nullable=False) 
+    order_id = db.Column(db.Integer, db.ForeignKey('Orders.id'), nullable=False)
     
     # Many to Many field: TOPPING_ID -> TOPPINGS_AMOUNT[topping_id, pizza_id, amount] <- PIZZA_ID
     toppings_amount = db.relationship('Topping', secondary=ToppingAmount, lazy=True, backref=db.backref('pizzas', lazy=True))
