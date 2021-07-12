@@ -1,7 +1,37 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
 
 db = SQLAlchemy()
+
+def initDB():
+    """Should only be called once to initialize the database"""
+    db.create_all()
+    initTables()
+    if os.environ.get('ENV_MODE') == 'DEV':
+        print('add dummy data here')
+
+def initTables():
+    """Initialize the tables with fixed values"""
+    sizes = (
+        Size(name='small', price=10),
+        Size(name='medium', price=16),
+        Size(name='family', price=20)
+    )
+    db.session.add_all(sizes)
+
+    toppings = (
+        Topping(name='ham', price=4.0),
+        Topping(name='mushrooms', price=3.5),
+        Topping(name='bell peppers', price=3.0),
+        Topping(name='double cheese', price=4.0),
+        Topping(name='olives', price=5.75),
+        Topping(name='pepperoni', price=3.85),
+        Topping(name='sausage', price=6.25),
+    )
+    db.session.add_all(toppings)
+
+    db.session.commit()
 
 class Size(db.Model):
     __tablename__ = 'Sizes'
