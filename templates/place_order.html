@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block scripts_head %}
-{% if ENV_MODE == 'DEV' %} <!-- ENV_MODE came from pizzeria/context_processors.py -->
+{% if config.ENV_MODE == 'DEV' %}
 <!-- react development version -->
 <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-{% elif ENV_MODE == 'PRODUCTION' %}
+{% elif config.ENV_MODE == 'PRODUCTION' %}
 <!-- react production version -->
 <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
@@ -25,9 +25,11 @@
 {% block scripts_footer %}
 <!-- data from backend that is later assigned to the script below this one -->
 <script>
-  var sizes = {{ sizes | safe }}
-  var toppings = {{ toppings | safe }}
+  //var sizes = {{ sizes | safe }}
+  var sizes = [];
+  //var toppings = {{ toppings | safe }}
+  var toppings = [];
 </script>
 <!-- the vue app file will live here-->
-<script src="{{ url_for('static', filename='js/place_order.js') }}"></script>
+<script type="text/babel" src="{{ url_for('static', filename='js/place_order.js') }}"></script>
 {% endblock %}
