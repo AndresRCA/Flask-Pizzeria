@@ -5,6 +5,8 @@ __pycache__/
 # Flask stuff:
 instance/
 .webassets-cache
+# DB
+*.db
 # Environments
 .env
 venv/

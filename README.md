@@ -26,6 +26,4 @@ Flask handles the MVC aspects of most of the project while React handles the vie
 
 2. Rename the .env.example file to .env and configure the file with the appropriate values.
 
-3. Create the database by entering the python interpreter on your command line and running the following instructions: `from app import db` -> `db.create_all()`.
-
-4. After exiting the python interpreter, run the `flask run` command, if `MODE == 'DEV'` in the .env file, dummy data will be created in the database.
+3. After exiting the python interpreter, run the `flask run` command, if `MODE == 'DEV'` in the .env file, dummy data will be created in the database (not yet implemented).
