@@ -1,11 +1,11 @@
-import Pizza from "../classes/Pizza";
-import Order from "../classes/Order";
-import { ToppingList, Topping } from "./Toppings";
-import { ErrorMessage } from "./ErrorMessage";
-import { PizzaItem } from "./PizzaItem";
+import Pizza from "../classes/Pizza.js";
+import Order from "../classes/Order.js";
+import { ToppingList, Topping } from "./Toppings.js";
+import { ErrorMessage } from "./ErrorMessage.js";
+import { PizzaItem } from "./PizzaItem.js";
 // either useful prototype functions or regular functions that don't have any relation to the component
-import "../helper_functions";
-import getCookie from "../helper_functions"; // this is just for readability, it's already imported up here
+import "../helper_functions.js";
+import getCookie from "../helper_functions.js"; // this is just for readability, it's already imported up here
 
 export default class PlaceOrder extends React.Component {
     constructor(props) {

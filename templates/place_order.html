@@ -30,6 +30,6 @@
   //var toppings = {{ toppings | safe }}
   var toppings = [];
 </script>
-<!-- the vue app file will live here-->
-<script type="text/babel" src="{{ url_for('static', filename='js/place_order.js') }}"></script>
+<!-- the react app file will live here-->
+<script type="module" src="{{ url_for('static', filename='js/place_order.js') }}"></script>
 {% endblock %}
