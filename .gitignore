@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+build/
 # Flask stuff:
 instance/
 .webassets-cache
