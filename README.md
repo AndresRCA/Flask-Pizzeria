@@ -26,7 +26,9 @@ Flask handles requests and database connections while React handles the view whe
 
 2. Rename the .env.example file to .env and configure it with the appropriate values.
 
-3. Create the initial database running the following instructions in the python interpreter.
+3. Run `npm install` to install all node dependencies and run `npm run build` to generate static files to be served.
+
+4. Create the initial database running the following instructions in the python interpreter.
 ```
 >>> from dotenv import load_dotenv
 >>> load_dotenv()
@@ -35,4 +37,11 @@ Flask handles requests and database connections while React handles the view whe
 >>> from models import initDB
 >>> initDB()
 ```
-4. After exiting the python interpreter, run the `flask run` command, if `ENV_MODE == 'DEV'` in the .env file, dummy data will be created in the database (not yet implemented).
+5. After exiting the python interpreter, run the `flask run` command, if `ENV_MODE == 'DEV'` in the .env file, dummy data will be created in the database (not yet implemented).
+
+## Development notes
+
+The files needed for the front-end of this proyect are transpiled using Webpack with babel presets to work with React, you can find the details of the entry and output inside the webpack.config.js file.
+
+To transpile these files in a readable format (that is, development mode), run the `npm run start` script.
+
