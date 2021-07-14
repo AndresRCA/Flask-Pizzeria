@@ -1,0 +1,38 @@
+{
+  "name": "flask-project",
+  "version": "1.0.0",
+  "description": "* Back-end: Flask.\r * Front-end: React.js, Bulma.css.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.44.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndresRCA/Flask-Pizzeria.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndresRCA/Flask-Pizzeria/issues"
+  },
+  "homepage": "https://github.com/AndresRCA/Flask-Pizzeria#readme"
+}
