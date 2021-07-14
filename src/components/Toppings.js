@@ -3,7 +3,7 @@
  * @returns JSX
  */
 export function ToppingList(props) {
-    return <div id="toppingList" class="field is-grouped is-grouped-multiline">
+    return <div id="toppingList" className="field is-grouped is-grouped-multiline">
         {props.children}
     </div>
 }
@@ -14,10 +14,10 @@ export function ToppingList(props) {
  * @returns JSX
  */
 export function Topping({ topping }) {
-    return <div class="control">
-        <div class="tags has-addons">
-            <span class="tag">{ topping.name }</span>
-            <span class="tag is-info">{ topping.price.currency() }</span>
+    return <div className="control">
+        <div className="tags has-addons">
+            <span className="tag">{ topping.name }</span>
+            <span className="tag is-info">{ topping.price.currency() }</span>
         </div>
     </div>
 }

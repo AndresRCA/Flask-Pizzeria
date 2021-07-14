@@ -1,8 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.resolve(__dirname, './src/place_order.js'),
-  module: {
+    entry: path.resolve(__dirname, './src/place_order.js'),
+    module: {
     rules: [
       {
         test: /\.(js|jsx)$/,

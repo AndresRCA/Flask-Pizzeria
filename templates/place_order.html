@@ -26,9 +26,9 @@
 <!-- data from backend that is later assigned to the script below this one -->
 <script>
   //var sizes = {{ sizes | safe }}
-  var sizes = [];
+  var sizes = [{id: 1, name: 'small', price: 3.2}];
   //var toppings = {{ toppings | safe }}
-  var toppings = [];
+  var toppings = [{id: 1, name: 'ham', price: 5.00}];
 </script>
 <!-- the react app file will live here-->
 <script type="module" src="{{ url_for('static', filename='js/place_order.bundle.js') }}"></script>

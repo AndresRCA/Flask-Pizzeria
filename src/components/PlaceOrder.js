@@ -26,7 +26,7 @@ export default class PlaceOrder extends React.Component {
     }
 
     size_price() {
-        return this.state.selected_size.price;
+        return this.state.selected_size?.price;
     }
 
     order_total() {
@@ -106,31 +106,31 @@ export default class PlaceOrder extends React.Component {
     }
 
     render() {
-        const { first_name, last_name, selected_size, error, sizes, pizzas, toppings } = this.state;
+        const { first_name, last_name, selected_size, error, sizes, pizzas, toppings, selected_toppings } = this.state;
 
         return (
             <div>
                 {/* error message when a validation error occurs */}
                 {error.isOn && <ErrorMessage message={error.message} deleteErrorMessage={this.deleteErrorMessage} />}
-                <h4 class="title is-4">Fill the data to order!</h4>
+                <h4 className="title is-4">Fill the data to order!</h4>
                 <hr />
                 <form onSubmit={(e) => this.placeOrder(e)}>
                     {/* {% csrf_token %} */}
-                    <div class="columns">
-                        <div class="column">
-                            <div class="field is-horizontal is-pulled-left">
-                                <div class="field-label is-normal">
-                                    <label class="label">Client:</label>
+                    <div className="columns">
+                        <div className="column">
+                            <div className="field is-horizontal is-pulled-left">
+                                <div className="field-label is-normal">
+                                    <label className="label">Client:</label>
                                 </div>
-                                <div class="field-body">
-                                    <div class="field">
-                                        <p class="control is-expanded">
-                                            <input value={first_name} onChange={(e) => this.handleChange(e, 'first_name')} name="first_name" class="input" type="text" placeholder="Name" required />
+                                <div className="field-body">
+                                    <div className="field">
+                                        <p className="control is-expanded">
+                                            <input value={first_name} onChange={(e) => this.handleChange(e, 'first_name')} name="first_name" className="input" type="text" placeholder="Name" required />
                                         </p>
                                     </div>
-                                    <div class="field">
-                                        <p class="control is-expanded">
-                                            <input value={last_name} onChange={(e) => this.handleChange(e, 'last_name')} name="last_name" class="input" type="text" placeholder="Last Name" required />
+                                    <div className="field">
+                                        <p className="control is-expanded">
+                                            <input value={last_name} onChange={(e) => this.handleChange(e, 'last_name')} name="last_name" className="input" type="text" placeholder="Last Name" required />
                                         </p>
                                     </div>
                                 </div>
@@ -138,83 +138,83 @@ export default class PlaceOrder extends React.Component {
                         </div>
                     </div>
                     
-                    <h4 class="title is-4">Customize your pizza</h4>
+                    <h4 className="title is-4">Customize your pizza</h4>
                     <hr />
 
-                    <div class="columns">
-                        <div class="column">
-                            <div class="field has-addons is-horizontal is-pulled-left">
-                                <div class="field-label is-normal">
-                                    <label class="label">Sizes:</label>
+                    <div className="columns">
+                        <div className="column">
+                            <div className="field has-addons is-horizontal is-pulled-left">
+                                <div className="field-label is-normal">
+                                    <label className="label">Sizes:</label>
                                 </div>
-                                <div class="field-body">
-                                    <div class="control">
-                                        <div class="select">
-                                            <select class="select" value={selected_size} onChange={(e) => this.handleChange(e, 'selected_size')}>
+                                <div className="field-body">
+                                    <div className="control">
+                                        <div className="select">
+                                            <select className="select" value={selected_size} onChange={(e) => this.handleChange(e, 'selected_size')}>
                                                 {/* size options from database */}
                                                 {sizes.map(size => 
-                                                    <option value={size}>{ size.name.capitalize() }</option>)}
+                                                    <option key={size.id} value={size}>{ size.name.capitalize() }</option>)}
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="control">
+                                    <div className="control">
                                         {/* size.price when a size is selected */}
-                                        <a class="button is-static">{ this.size_price().currency() }</a>
+                                        <a className="button is-static">{ this.size_price().currency() }</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="columns">
-                        <div class="column">
-                            <h6 class="title is-6">Toppings:</h6>      
-                            <div class="field is-grouped is-grouped-multiline">
+                    <div className="columns">
+                        <div className="column">
+                            <h6 className="title is-6">Toppings:</h6>      
+                            <div className="field is-grouped is-grouped-multiline">
                                 {/* selected tags go here */}
                                 {selected_toppings.map((topping, index) => 
-                                    <div key={topping.id} class="control">
-                                        <div class="tags has-addons">
-                                            <span class="tag">{ topping.name }</span>
-                                            <a onClick={() => this.removeToppingFromSelected(index)} class="tag is-delete"></a>
+                                    <div key={topping.id} className="control">
+                                        <div className="tags has-addons">
+                                            <span className="tag">{ topping.name }</span>
+                                            <a onClick={() => this.removeToppingFromSelected(index)} className="tag is-delete"></a>
                                         </div>
                                     </div>)}
                             </div>
                         </div>
-                        <div class="column">
-                            <h6 class="title is-6 has-text-centered">Select your toppings:</h6>
+                        <div className="column">
+                            <h6 className="title is-6 has-text-centered">Select your toppings:</h6>
                             <ToppingList>
                                 {/* topping tags are generated here */}
-                                {toppings.map(topping => <Topping topping={topping} onClick={() => this.addTopping(topping.id)} />)}
+                                {toppings.map(topping => <Topping key={topping.id} topping={topping} onClick={() => this.addTopping(topping.id)} />)}
                             </ToppingList>
                         </div>
                     </div>
 
-                    <div class="field">
-                        <div class="control">
-                            <button type="button" onClick={() => this.addPizza()} class="button">+Add Pizza</button>
+                    <div className="field">
+                        <div className="control">
+                            <button type="button" onClick={() => this.addPizza()} className="button">+Add Pizza</button>
                         </div>
                     </div>
 
                     <hr />
-                    <h4 class="title is-4">Pizzas:</h4>
+                    <h4 className="title is-4">Pizzas:</h4>
                     {(pizzas.length > 0) 
                         ? 
                         <ul>
                             {/* pizza items go here */}
                             {pizzas.map((pizza, index) => 
-                                <PizzaItem pizza={pizza} index={index} removePizza={this.removePizza} />)}
+                                <PizzaItem key={index} pizza={pizza} index={index} removePizza={this.removePizza} />)}
                         </ul>
                         : 
-                        <div class="content has-text-centered">
-                            <p class="is-size-5 has-text-weight-light">There are no pizzas yet</p>
+                        <div className="content has-text-centered">
+                            <p className="is-size-5 has-text-weight-light">There are no pizzas yet</p>
                         </div>
                     }
 
                     <hr />
                     
                     {pizzas.length > 0 && 
-                        <div class="content" style="display: flex; justify-content: space-between;">
-                            <input type="submit" value="Order" class="button is-info" />
+                        <div className="content" style="display: flex; justify-content: space-between;">
+                            <input type="submit" value="Order" className="button is-info" />
                             <p><b>Order total:</b>&nbsp;{ order_total.currency() }</p>
                         </div>
                     }
