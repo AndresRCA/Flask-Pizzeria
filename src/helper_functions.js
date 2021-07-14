@@ -19,12 +19,10 @@ export function getCookie(name) {
  * formats a number to $ currency format
  * @returns string
  */
-Number.prototype.currency = () => {
-    if (!this) return '';
+Number.prototype.currency = function() {
     return "$" + Number.parseFloat(this).toFixed(2);
 };
 
-String.prototype.capitalize = () => {
-    if (!this) return '';
+String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
