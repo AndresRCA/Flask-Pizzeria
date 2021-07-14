@@ -60,7 +60,7 @@ export default class PlaceOrder extends React.Component {
     }
 
     addPizza() {
-        let toppings_copy = Array.from(this.selected_toppings); // get shallow copy
+        let toppings_copy = Array.from(this.state.selected_toppings); // get shallow copy
         let pizza = new Pizza(this.state.selected_size, toppings_copy);
         this.setState(prevState => ({ pizzas: [...prevState.pizzas, pizza]}));
     }
@@ -172,7 +172,7 @@ export default class PlaceOrder extends React.Component {
                             <div className="field is-grouped is-grouped-multiline">
                                 {/* selected tags go here */}
                                 {selected_toppings.map((topping, index) => 
-                                    <div key={topping.id} className="control">
+                                    <div key={index} className="control">
                                         <div className="tags has-addons">
                                             <span className="tag">{ topping.name }</span>
                                             <a onClick={() => this.removeToppingFromSelected(index)} className="tag is-delete"></a>
@@ -184,7 +184,7 @@ export default class PlaceOrder extends React.Component {
                             <h6 className="title is-6 has-text-centered">Select your toppings:</h6>
                             <ToppingList>
                                 {/* topping tags are generated here */}
-                                {toppings.map(topping => <Topping key={topping.id} topping={topping} onClick={() => this.addTopping(topping.id)} />)}
+                                {toppings.map(topping => <Topping key={topping.id} topping={topping} addTopping={this.addTopping.bind(this)} />)}
                             </ToppingList>
                         </div>
                     </div>
@@ -202,7 +202,7 @@ export default class PlaceOrder extends React.Component {
                         <ul>
                             {/* pizza items go here */}
                             {pizzas.map((pizza, index) => 
-                                <PizzaItem key={index} pizza={pizza} index={index} removePizza={this.removePizza} />)}
+                                <PizzaItem key={index} pizza={pizza} index={index} removePizza={this.removePizza.bind(this)} />)}
                         </ul>
                         : 
                         <div className="content has-text-centered">
@@ -213,9 +213,9 @@ export default class PlaceOrder extends React.Component {
                     <hr />
                     
                     {pizzas.length > 0 && 
-                        <div className="content" style="display: flex; justify-content: space-between;">
+                        <div className="content" style={{display: 'flex', justifyContent: 'space-between'}}>
                             <input type="submit" value="Order" className="button is-info" />
-                            <p><b>Order total:</b>&nbsp;{ order_total.currency() }</p>
+                            <p><b>Order total:</b>&nbsp;{ this.order_total().currency() }</p>
                         </div>
                     }
 

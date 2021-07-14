@@ -13,8 +13,8 @@ export function ToppingList(props) {
  * @param {Topping} topping 
  * @returns JSX
  */
-export function Topping({ topping }) {
-    return <div className="control">
+export function Topping({ topping, addTopping }) {
+    return <div className="control" onClick={() => addTopping(topping.id)}>
         <div className="tags has-addons">
             <span className="tag">{ topping.name }</span>
             <span className="tag is-info">{ topping.price.currency() }</span>
