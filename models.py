@@ -43,7 +43,7 @@ class Size(db.Model):
     pizzas = db.relationship('Pizza', backref='size', lazy=True) # set relationship with Pizzas table (one to many)
     
     def __repr__(self):
-        return self.name
+        return '<Size %r>' % self.name
 	
 class Topping(db.Model):
     __tablename__ = 'Toppings'
@@ -70,7 +70,7 @@ class Order(db.Model):
     #    ordering = ['-order_date']
 	
     def __repr__(self):
-        return self.full_name
+        return '<Order %r>' % self.full_name
 	
     @property
     def full_name(self):
@@ -92,7 +92,7 @@ class Sale(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('Orders.id'), nullable=False) # A sale only has one row in Order table (one to one)
 
     def __repr__(self):
-        return "Sale from {}".format(self.order.full_name)
+        return '<Sale %r>' % self.order.full_name
 
 # will the the extra column 'amount' be alright? 
 ToppingAmount = db.Table('ToppingAmount', 
@@ -115,7 +115,7 @@ class Pizza(db.Model):
     #    order_with_respect_to = 'order' # it's something like this: order1->pizza1,pizza2. order2->pizza1. order3->pizza1 ; instead of order1->pizza1. order2->pizza1. order1->pizza2...
         
     def __repr__(self):
-        return "Pizza ({}), {}".format(self.id, self.order.full_name)
+        return '<Pizza (%r), %r>' % (self.id, self.order.full_name)
 
     @property
     def total(self):
