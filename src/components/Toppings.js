@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * acts as a wrapper for the Topping component
  * @returns JSX

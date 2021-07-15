@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function ErrorMessage({ message, deleteErrorMessage }) {
     return <article className="message is-danger is-small">
         <div className="message-header">

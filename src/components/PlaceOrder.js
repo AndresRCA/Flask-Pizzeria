@@ -1,3 +1,4 @@
+import React, { Component } from "react";
 import Pizza from "../classes/Pizza";
 import Order from "../classes/Order";
 import { ToppingList, Topping } from "./Toppings";
@@ -7,7 +8,7 @@ import { PizzaItem } from "./PizzaItem";
 import "../helper_functions";
 import getCookie from "../helper_functions"; // this is just for readability, it's already imported up here
 
-export default class PlaceOrder extends React.Component {
+export default class PlaceOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -77,24 +78,25 @@ export default class PlaceOrder extends React.Component {
         const order = new Order(this.state.first_name, this.state.last_name, pizzas_copy);
 
         try {
-        let response = await fetch('/order/', {
-            method: 'POST',
-            mode: 'same-origin',
-            body: JSON.stringify(order),
-            headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFTOKEN': getCookie('csrftoken')
+            let response = await fetch('/order/', {
+                method: 'POST',
+                mode: 'same-origin',
+                body: JSON.stringify(order),
+                headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFTOKEN': getCookie('csrftoken')
+                }
+            });
+
+            // fetch has a flaw when errors come in, it's weird
+            if(response.status != 200) { // throw error to handle it inside catch(){}
+                let error_message = await response.text();
+                throw new Error(error_message);
             }
-        });
 
-        if(response.status != 200) { // throw error to handle it inside catch(){}
-            let error_message = await response.text();
-            throw new Error(error_message);
-        }
-
-        let res_message = await response.text();
-        console.log(res_message); // the response was successful
-        window.location.href = '/order/confirm'; // redirect to confirmation view (try to do this from flask instead)
+            let res_message = await response.text();
+            console.log(res_message); // the response was successful
+            window.location.href = '/order/confirm'; // redirect to confirmation view (try to do this from flask instead)
         } catch(e) {
             console.log(e);
             this.setState({ error: { message: e, isOn: true }});
@@ -218,7 +220,6 @@ export default class PlaceOrder extends React.Component {
                             <p><b>Order total:</b>&nbsp;{ this.order_total().currency() }</p>
                         </div>
                     }
-
                 </form>
             </div>
         );

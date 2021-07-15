@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function PizzaItem({ pizza, index, removePizza }) {
     return <li key={index} className="level">
         <div className="level-left">
