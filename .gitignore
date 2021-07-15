@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 build/
+./static/js/*.bundle.js
 # Flask stuff:
 instance/
 .webassets-cache
