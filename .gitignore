@@ -3,7 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 build/
-./static/js/*.bundle.js
+# think of this as the build or dist folder for js files
+static/js/*.bundle.js
 # Flask stuff:
 instance/
 .webassets-cache
