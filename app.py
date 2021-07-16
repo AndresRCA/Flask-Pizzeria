@@ -1,6 +1,6 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, jsonify
 from config import Config
-from models import db
+from models import db, Size, Topping
 import json
 
 app = Flask(__name__)
@@ -13,12 +13,8 @@ def index():
 
 @app.route("/order", methods=['GET', 'POST'])
 def placeOrder():
-    if request.method == 'GET':
-        context = {}
-        # get data from the database to display
-		# context['sizes'] = json.dumps(list(Size.objects.all().values()))
-		# context['toppings'] = json.dumps(list(Topping.objects.all().values()))		
-        return render_template('place_order.html', context=context) # jsonify() is probably necessary here? I'll check later
+    if request.method == 'GET':		
+        return render_template('place_order.html')
 
     if request.method == 'POST':
         order_info = json.loads(request.body) # obtains the info from the poll.
@@ -47,3 +43,13 @@ def confirmOrder():
 @app.route("/order/finalize")
 def finalizeOrder():
     return render_template('finalize_order.html')
+
+@app.route('/api/order', methods=['GET'])
+def sendSizeAndToppings():
+    """Send sizes and toppings from the database"""
+    sizes = []
+    sizes = [{'id': size.id, 'name': size.name, 'price': size.price} for size in Size.query.all()]
+    toppings = []
+    toppings = [{'id': topping.id, 'name': topping.name, 'price': topping.price} for topping in Topping.query.all()]
+    # I feel like there should be a better way to parse the model objects to json and send it
+    return jsonify({ 'sizes': sizes, 'toppings': toppings })

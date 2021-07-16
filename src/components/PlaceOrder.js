@@ -14,9 +14,9 @@ export default class PlaceOrder extends Component {
         this.state = {
             first_name: '',
             last_name: '',
-            sizes: sizes, // sizes received from backend in template: {id, name, price}
-            selected_size: sizes[0], // size object
-            toppings: toppings, // toppings received from backend in template: {id, name, price}
+            sizes: [], // sizes received from backend in template: {id, name, price}
+            selected_size: {}, // size object
+            toppings: [], // toppings received from backend in template: {id, name, price}
             selected_toppings: [],
             pizzas: [], // array of Pizza objects
             error: {
@@ -78,7 +78,7 @@ export default class PlaceOrder extends Component {
         const order = new Order(this.state.first_name, this.state.last_name, pizzas_copy);
 
         try {
-            let response = await fetch('/order/', {
+            let response = await fetch('/order', {
                 method: 'POST',
                 mode: 'same-origin',
                 body: JSON.stringify(order),
@@ -105,6 +105,21 @@ export default class PlaceOrder extends Component {
 
     deleteErrorMessage() {
         this.setState({ error: { isOn: false } });
+    }
+
+    componentDidMount() {
+        fetch('/api/order')
+        .then(res => {
+            console.log(res);
+            return res.json();
+
+        })
+        .then(data => {
+            this.setState({ sizes: data.sizes, selected_size: data.sizes[0], toppings: data.toppings });
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     render() {
@@ -161,7 +176,7 @@ export default class PlaceOrder extends Component {
                                     </div>
                                     <div className="control">
                                         {/* size.price when a size is selected */}
-                                        <a className="button is-static">{ this.size_price().currency() }</a>
+                                        <a className="button is-static">{ selected_size.price?.currency() }</a>
                                     </div>
                                 </div>
                             </div>

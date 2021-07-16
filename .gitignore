@@ -13,5 +13,6 @@ instance/
 # Environments
 .env
 venv/
+.vscode
 # Node
 node_modules
