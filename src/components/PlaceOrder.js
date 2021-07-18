@@ -14,8 +14,8 @@ export default class PlaceOrder extends Component {
         this.state = {
             first_name: '',
             last_name: '',
-            sizes: [], // sizes received from backend in template: {id, name, price}
-            selected_size: {}, // size object
+            sizes: [{id: 1, name: '', price: 0.00}], // sizes received from backend in template: {id, name, price}
+            selected_size: {id: 1, name: '', price: 0.00}, // size object
             toppings: [], // toppings received from backend in template: {id, name, price}
             selected_toppings: [],
             pizzas: [], // array of Pizza objects
@@ -26,8 +26,12 @@ export default class PlaceOrder extends Component {
         };
     }
 
+    /******* Computed properties *******/
+    /* I call them computed properties but they're not exactly that...
+    I'd like to use useMemo() if this component wasn't a class... */
+
     size_price() {
-        return this.state.selected_size?.price;
+        return this.state.selected_size.price;
     }
 
     order_total() {
@@ -37,6 +41,7 @@ export default class PlaceOrder extends Component {
         });
         return total;
     }
+    /***********************************/
 
     /**
      * handle input change and set state according to given key
@@ -49,6 +54,12 @@ export default class PlaceOrder extends Component {
         this.setState(new_state);
     }
 
+    onSelectSize(event) {
+        let size = this.state.sizes.find(size => size.id == event.target.value);
+        this.setState({selected_size: size});
+    }
+
+    /******* Component methods *********/
     addTopping(id) {
         let topping = this.state.toppings.find(topping => topping.id == id);
         this.setState(prevState => ({selected_toppings: [...prevState.selected_toppings, topping]}));
@@ -106,6 +117,7 @@ export default class PlaceOrder extends Component {
     deleteErrorMessage() {
         this.setState({ error: { isOn: false } });
     }
+    /***********************************/
 
     componentDidMount() {
         fetch('/api/order')
@@ -123,7 +135,7 @@ export default class PlaceOrder extends Component {
     }
 
     render() {
-        const { first_name, last_name, selected_size, error, sizes, pizzas, toppings, selected_toppings } = this.state;
+        const { first_name, last_name, error, sizes, pizzas, toppings, selected_toppings } = this.state;
 
         return (
             <div>
@@ -167,16 +179,16 @@ export default class PlaceOrder extends Component {
                                 <div className="field-body">
                                     <div className="control">
                                         <div className="select">
-                                            <select className="select" value={selected_size} onChange={(e) => this.handleChange(e, 'selected_size')}>
+                                            <select className="select" onChange={(e) => this.onSelectSize(e)}>
                                                 {/* size options from database */}
                                                 {sizes.map(size => 
-                                                    <option key={size.id} value={size}>{ size.name.capitalize() }</option>)}
+                                                    <option key={size.id} value={size.id}>{ size.name.capitalize() }</option>)}
                                             </select>
                                         </div>
                                     </div>
                                     <div className="control">
                                         {/* size.price when a size is selected */}
-                                        <a className="button is-static">{ selected_size.price?.currency() }</a>
+                                        <a className="button is-static">{ this.size_price().currency() }</a>
                                     </div>
                                 </div>
                             </div>
