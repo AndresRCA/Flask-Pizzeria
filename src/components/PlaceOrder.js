@@ -27,13 +27,15 @@ export default class PlaceOrder extends Component {
     }
 
     /******* Computed properties *******/
-    /* I call them computed properties but they're not exactly that...
-    I'd like to use useMemo() if this component wasn't a class... */
+    /* memoize-one could be used for some of these functions,
+    but the processes are not that complex so I guess it's fine for now */
 
     size_price() {
         return this.state.selected_size.price;
     }
 
+    /* Maybe this method would be worth using memoize-one on, if you assumed someone
+    ordered an insane amount of pizzas */
     order_total() {
         let total = 0.00;
         this.state.pizzas.forEach(pizza => {
@@ -49,6 +51,8 @@ export default class PlaceOrder extends Component {
      * @param {string} key 
      */
     handleChange(event, key) {
+        // maybe I should define a shouldComponentUpdate() so render() isn't called
+        // everytime a user types something on <input />? for optimization purposes.
         let new_state = {};
         new_state[key] = event.target.value;
         this.setState(new_state);
@@ -83,6 +87,9 @@ export default class PlaceOrder extends Component {
         this.setState({ pizzas });
     }
 
+    /**
+     * Send a POST request to the server with the pizzas that are going to be stored in the DB
+     */
     async placeOrder(event) {
         event.prevenDefault();
         let pizzas_copy = Array.from(this.state.pizzas);
@@ -121,17 +128,28 @@ export default class PlaceOrder extends Component {
 
     componentDidMount() {
         fetch('/api/order')
-        .then(res => {
-            console.log(res);
-            return res.json();
+            .then(res => {
+                console.log(res);
+                return res.json();
+            })
+            .then(data => {
+                this.setState({ sizes: data.sizes, selected_size: data.sizes[0], toppings: data.toppings });
+            })
+            .catch(e => {
+                console.log(e);
+            })
+    }
 
-        })
-        .then(data => {
-            this.setState({ sizes: data.sizes, selected_size: data.sizes[0], toppings: data.toppings });
-        })
-        .catch(e => {
-            console.log(e);
-        })
+    shouldComponentUpdate(nextProps, nextState) {
+        // state variables that often change on input return false
+        if (nextState.first_name !== this.state.first_name) {
+            return false;
+        }
+        if (nextState.last_name !== this.state.last_name) {
+            return false;
+        }
+
+        return true;
     }
 
     render() {
