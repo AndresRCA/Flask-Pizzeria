@@ -1,5 +1,7 @@
 ## Website design for ordering pizzas
 
+>Currently only the frontend, that is React.js, is the only part working, the backend remains unfinished for the time being.
+
 ## Components
 
 * Back-end: Flask.
